@@ -27,7 +27,7 @@
     $supa_port = "6543";
     $supa_dbname = "postgres";
     $supa_user = "postgres.quqawpmlsnoununphesg";
-    $supa_password = "mainstore@@";
+    $supa_password = "main-store@@";
  
     $supa_conn = pg_connect(
         "
