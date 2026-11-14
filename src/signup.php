@@ -8,7 +8,8 @@ $last_name    = $_POST['lname'];
 $ident_number = $_POST['idnumber'];
 $mobile_phone = $_POST['mphone'];
 $email        = $_POST['email'];
-$passwd       = MD5($_POST['psw']);
+$passwd = md5($_POST['psw'] ?? '');
+$PHOTO_URL = 'photos/photo_default.png';
 
 $sql_check_email = "SELECT * FROM users WHERE email = $1 ";
 $params = [$email];
@@ -17,10 +18,10 @@ $total = pg_num_rows($res);
 if($total < 1){
 //Prepare query
 $sql = "
-    INSERT INTO users (firstname, lastname, ident_number, mobile_phone, email, password)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO users (firstname, lastname, ident_number, mobile_phone, email, password, url_photo)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 ";
-$params = [$first_name, $last_name, $ident_number, $mobile_phone, $email, $passwd];
+$params = [$first_name, $last_name, $ident_number, $mobile_phone, $email, $passwd, $PHOTO_URL];
 
 //Execute query in both databases
 $res_local = pg_query_params($local_conn, $sql, $params);
