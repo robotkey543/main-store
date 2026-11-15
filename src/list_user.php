@@ -7,14 +7,14 @@ include('settings/database.php');
 
 //Get data from users table
 $sql="
-select 
+select
     id,
     firstname || ' ' || lastname as fullname,
     email,
     mobile_phone,
     case when status = true then 'Active' else 'Inactive' end as status,
     url_photo
-from 
+from
     users
 ";
 $res = pg_query($local_conn, $sql);
@@ -33,38 +33,44 @@ $res = pg_query($local_conn, $sql);
 <body>
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>Photo</th>
-            <th>Fullname</th>
-            <th>Email</th>
-            <th>Mobile phone</th>
-            <th>Status</th>
-            <th>Options</th>
-        </tr>
-</thead>
+            <tr>
+                <th>Photo</th>
+                <th>Fullname</th>
+                <th>Email</th>
+                <th>Mobile phone</th>
+                <th>Status</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
         <?php while($row = pg_fetch_assoc($res)) { ?>
-        <tr>
-            <!-- Here print data drom database -->
-            <td>
-                <img src="<?= $row['url_photo'] ?>" width="40" alt="User photo profile">
-            </td>"
-            <td><?= $row['fullname'] ?></td>
-            <td><?= $row['email'] ?></td>
-            <td><?= $row['mobile_phone'] ?></td>
-            <td><?= $row['status'] ?></td>
-            <td>
-                <a href="#">
-                    <img src="icons/edit.png" alt="edit user" width="20">
-                </a>
-                <a href="#">
-                    <img src="icons/search.png" alt="search user" width="20">
-                </a>
-                <a href="#">
-                    <img src="icons/delete.png" alt="delete user" width="20">
-                </a>
-            </td>
-         <tr>
-         <?php } ?>
-     <table>
-  </body>
+            <tr>
+                <!-- Here print data from database -->
+                <td>
+                    <?php if (!empty($row['url_photo'])) { ?>
+                        <img src="<?= $row['url_photo'] ?>" width="40" alt="User photo profile">
+                    <?php } else { ?>
+                        Sin foto
+                    <?php } ?>
+                </td>
+                <td><?= $row['fullname'] ?></td>
+                <td><?= $row['email'] ?></td>
+                <td><?= $row['mobile_phone'] ?></td>
+                <td><?= $row['status'] ?></td>
+                <td>
+                    <a href="edit_user.php?id=<?= $row['id'] ?>">
+                        <img src="icons/edit.png" alt="edit user" width="20">
+                    </a>
+                    <a href="#">
+                        <img src="icons/search.png" alt="search user" width="20">
+                    </a>
+                    <a href="delete_user.php?userID=<?= $row['id'] ?>">
+                        <img src="icons/delete.png" alt="delete user" width="20">
+                    </a>
+                </td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+</body>
 </html>
