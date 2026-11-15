@@ -26,10 +26,13 @@ $res = pg_query($local_conn, $sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Store - List Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-    <table border = "2" align = "center">
+    <table class="table table-striped">
+        <thead>
         <tr>
             <th>Photo</th>
             <th>Fullname</th>
@@ -38,6 +41,7 @@ $res = pg_query($local_conn, $sql);
             <th>Status</th>
             <th>Options</th>
         </tr>
+</thead>
         <?php while($row = pg_fetch_assoc($res)) { ?>
         <tr>
             <!-- Here print data drom database -->
@@ -48,7 +52,7 @@ $res = pg_query($local_conn, $sql);
             <td><?= $row['email'] ?></td>
             <td><?= $row['mobile_phone'] ?></td>
             <td><?= $row['status'] ?></td>
-            <td align="center">
+            <td>
                 <a href="#">
                     <img src="icons/edit.png" alt="edit user" width="20">
                 </a>
