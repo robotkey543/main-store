@@ -64,7 +64,7 @@ $res = pg_query($local_conn, $sql);
                     <a href="#">
                         <img src="icons/search.png" alt="search user" width="20">
                     </a>
-                    <a href="delete_user.php?userID=<?= $row['id'] ?>">
+                    <a href="#" onclick="askDelete(<?= $row['id'] ?>); return false;">
                         <img src="icons/delete.png" alt="delete user" width="20">
                     </a>
                 </td>
@@ -72,5 +72,43 @@ $res = pg_query($local_conn, $sql);
         <?php } ?>
         </tbody>
     </table>
+
+    <!-- Delete / Inactivate modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete user</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    What do you want to do with this user?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" onclick="confirmAction('inactivate')">Inactivate</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmAction('delete')">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let selectedUserId = null;
+
+    function askDelete(id) {
+        selectedUserId = id;
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+
+    function confirmAction(action) {
+        let text = (action === 'delete')
+            ? 'Are you sure you want to DELETE this user permanently?'
+            : 'Are you sure you want to INACTIVATE this user?';
+        if (confirm(text)) {
+            window.location.href = 'delete_user.php?userID=' + selectedUserId + '&action=' + action;
+        }
+    }
+    </script>
 </body>
 </html>
