@@ -58,13 +58,31 @@ $res = pg_query($local_conn, $sql);
                 <td><?= $row['mobile_phone'] ?></td>
                 <td><?= $row['status'] ?></td>
                 <td>
+                    <!-- Edit -->
                     <a href="edit_user.php?id=<?= $row['id'] ?>">
                         <img src="icons/edit.png" alt="edit user" width="20">
                     </a>
+
+                    <!-- Search -->
                     <a href="#">
                         <img src="icons/search.png" alt="search user" width="20">
                     </a>
-                    <a href="#" onclick="askDelete(<?= $row['id'] ?>); return false;">
+
+                    <!-- Enable / Disable -->
+                    <?php if ($row['status'] === 'Active') { ?>
+                        <a href="delete_user.php?userID=<?= $row['id'] ?>&action=inactivate"
+                           onclick="return confirm('¿Estás seguro de que quieres desactivar este usuario?');">
+                            <img src="icons/enable.png" alt="user active, click to disable" width="20">
+                        </a>
+                    <?php } else { ?>
+                        <a href="delete_user.php?userID=<?= $row['id'] ?>&action=activate">
+                            <img src="icons/disable.png" alt="user inactive, click to enable" width="20">
+                        </a>
+                    <?php } ?>
+
+                    <!-- Delete -->
+                    <a href="delete_user.php?userID=<?= $row['id'] ?>&action=delete"
+                       onclick="return confirm('¿Estás seguro de que quieres eliminar este usuario?');">
                         <img src="icons/delete.png" alt="delete user" width="20">
                     </a>
                 </td>
@@ -72,43 +90,5 @@ $res = pg_query($local_conn, $sql);
         <?php } ?>
         </tbody>
     </table>
-
-    <!-- Delete / Inactivate modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Delete user</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    What do you want to do with this user?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-warning" onclick="confirmAction('inactivate')">Inactivate</button>
-                    <button type="button" class="btn btn-danger" onclick="confirmAction('delete')">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    let selectedUserId = null;
-
-    function askDelete(id) {
-        selectedUserId = id;
-        new bootstrap.Modal(document.getElementById('deleteModal')).show();
-    }
-
-    function confirmAction(action) {
-        let text = (action === 'delete')
-            ? 'Are you sure you want to DELETE this user permanently?'
-            : 'Are you sure you want to INACTIVATE this user?';
-        if (confirm(text)) {
-            window.location.href = 'delete_user.php?userID=' + selectedUserId + '&action=' + action;
-        }
-    }
-    </script>
 </body>
 </html>
