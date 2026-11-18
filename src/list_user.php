@@ -2,8 +2,21 @@
 /*
 Use this URL to print data in browser:
 http://localhost/main-store/src/list_user.php
+http://localhost/main-store/src/list_user.php?filter=active
+http://localhost/main-store/src/list_user.php?filter=inactive
 */
 include('settings/database.php');
+
+// Filter: all | active | inactive
+$filter = $_GET['filter'] ?? 'all';
+if ($filter === 'active') {
+    $where = 'where status = true';
+} elseif ($filter === 'inactive') {
+    $where = 'where status = false';
+} else {
+    $filter = 'all';
+    $where = '';
+}
 
 //Get data from users table
 $sql="
@@ -16,6 +29,8 @@ select
     url_photo
 from
     users
+$where
+order by id
 ";
 $res = pg_query($local_conn, $sql);
 ?>
@@ -31,6 +46,12 @@ $res = pg_query($local_conn, $sql);
 </head>
 
 <body>
+    <select onchange="window.location.href='list_user.php?filter=' + this.value">
+        <option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>List all users</option>
+        <option value="active" <?= $filter === 'active' ? 'selected' : '' ?>>List active users only</option>
+        <option value="inactive" <?= $filter === 'inactive' ? 'selected' : '' ?>>List inactive users only</option>
+    </select>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -45,7 +66,6 @@ $res = pg_query($local_conn, $sql);
         <tbody>
         <?php while($row = pg_fetch_assoc($res)) { ?>
             <tr>
-                <!-- Here print data from database -->
                 <td>
                     <?php if (!empty($row['url_photo'])) { ?>
                         <img src="<?= $row['url_photo'] ?>" width="40" alt="User photo profile">
@@ -70,12 +90,12 @@ $res = pg_query($local_conn, $sql);
 
                     <!-- Enable / Disable -->
                     <?php if ($row['status'] === 'Active') { ?>
-                        <a href="delete_user.php?userID=<?= $row['id'] ?>&action=inactivate"
+                        <a href="update_user_status.php?userID=<?= $row['id'] ?>&action=inactivate&filter=<?= $filter ?>"
                            onclick="return confirm('¿Estás seguro de que quieres desactivar este usuario?');">
                             <img src="icons/enable.png" alt="user active, click to disable" width="20">
                         </a>
                     <?php } else { ?>
-                        <a href="delete_user.php?userID=<?= $row['id'] ?>&action=activate">
+                        <a href="update_user_status.php?userID=<?= $row['id'] ?>&action=activate&filter=<?= $filter ?>">
                             <img src="icons/disable.png" alt="user inactive, click to enable" width="20">
                         </a>
                     <?php } ?>
