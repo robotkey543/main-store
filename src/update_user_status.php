@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: signin.html');
+    exit();
+}
+
 /*
 Use this Endpoint to test request
 http://localhost/main-store/src/update_user_status.php?userID=ANY-ID-NUMBER&action=inactivate
