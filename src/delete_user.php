@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: signin.html');
+    exit();
+}
+
 /*
 Use this Endpoint to test request
 http://localhost/main-store/src/delete_user.php?userID=ANY-ID-NUMBER&action=delete
@@ -8,7 +14,13 @@ http://localhost/main-store/src/delete_user.php?userID=ANY-ID-NUMBER&action=acti
 include('settings/database.php');
 
 // Get data
-$user_id = $_GET['userID'];
+$user_id = $_GET['userID'] ?? '';
+$action  = $_GET['action'] ?? '';
+
+if ($user_id === '') {
+    header('refresh:0;url=list_user.php');
+    exit;
+}
 $action  = $_GET['action'] ?? '';
 
 // Prepare query
