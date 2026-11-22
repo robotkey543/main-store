@@ -1,56 +1,30 @@
 <?php
-//Database connection
-/*
-   To test connection, please go to:
-   http://localhost/main-store/settings/database.php
-*/
+// Database connection (datos en settings/.env)
+$env = parse_ini_file(__DIR__ . '/.env');
 
-    //Local connection
-    $local_host = "localhost";
-    $local_port = "5432";
-    $local_dbname = "mainstore";
-    $local_user = "postgres";
-    $local_password = "play3001";
- 
-    $local_conn = pg_connect(
-        "
-        host=$local_host
-        port=$local_port
-        dbname=$local_dbname
-        user=$local_user
-        password=$local_password
-    "
-    );
+// Local connection
+$local_conn = pg_connect("
+    host={$env['LOCAL_HOST']}
+    port={$env['LOCAL_PORT']}
+    dbname={$env['LOCAL_DB']}
+    user={$env['LOCAL_USER']}
+    password='{$env['LOCAL_PASSWORD']}'
+");
 
-    //Supa connection
-    $supa_host = "aws-1-us-west-2.pooler.supabase.com";
-    $supa_port = "6543";
-    $supa_dbname = "postgres";
-    $supa_user = "postgres.quqawpmlsnoununphesg";
-    $supa_password = "main-store@@";
- 
-    $supa_conn = pg_connect(
-        "
-        host=$supa_host
-        port=$supa_port
-        dbname=$supa_dbname
-        user=$supa_user
-        password=$supa_password
-    "
-    );
- 
-    if (!$local_conn) {
-        die("Error local connection");
-    }else{
-       // echo "Success database local connection !!!";
-    }
+// Supa connection
+$supa_conn = pg_connect("
+    host={$env['SUPA_HOST']}
+    port={$env['SUPA_PORT']}
+    dbname={$env['SUPA_DB']}
+    user={$env['SUPA_USER']}
+    password='{$env['SUPA_PASSWORD']}'
+");
 
-     if (!$supa_conn) {
-        die("Error supa connection");
-    }else{
-        //echo "<br>Success database supa connection !!!";
-    }
+if (!$local_conn) {
+    die("Error local connection");
+}
 
-
-
+if (!$supa_conn) {
+    die("Error supa connection");
+}
 ?>

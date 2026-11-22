@@ -1,10 +1,9 @@
 <?php
-    session_start();
-    if(!isset($_SESSION['user_id'])){
-        header('refresh:0;url=home.php'); 
-        exit();
-
-    }
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: signin.html');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,9 +15,13 @@
 
 <body>
     <center>
-      <?php echo $_SESSION['user_firstname']." ". $_SESSION['user_lastname']; ?>  
+        <?php echo htmlspecialchars($_SESSION['user_firstname'] . " " . $_SESSION['user_lastname']); ?>
         <h3>Welcome to Main Store</h3> | <a href="logout.php">Logout</a>
     </center>
+
+    Menu: <br>
+    <a href="list_user.php">List users</a>
+
 </body>
 
 </html>

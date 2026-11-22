@@ -1,51 +1,55 @@
 <?php
-//Get datavase connection
+//Get database connection
 include('settings/database.php');
 
 session_start();
-if(!isset($_SESSION['user_id'])){
-    header('refresh:0;url=signin.html');
-}else{
-    header('refresh:0;url=home.php');
-}
 
 //Get payload from frontend
-$email   = $_POST['email'];
-$passwd  = MD5($_POST['psw']);
+$email  = $_POST['email'] ?? '';
+$passwd = $_POST['psw'] ?? '';
 
-$sql_check_email = "
-    SELECT 
-        id,
-        firstname,
-        lastname,
-        email,
-        url_photo
-    FROM 
-        users 
-    WHERE 
-        email = $1";
-$params_email = [$email];
-$res_email = pg_query_params($local_conn, $sql_check_email, $params_email);
-$total_email = pg_num_rows($res_email);
+$sql = "
+    SELECT id, firstname, lastname, email, url_photo, password, status
+    FROM users
+    WHERE email = $1";
+$res = pg_query_params($local_conn, $sql, [$email]);
+$row = pg_fetch_assoc($res);
 
-if ($total_email > 0) {
-    $sql_check_pass = "SELECT * FROM users WHERE email = $1 AND password = $2";
-    $params_pass = [$email, $passwd];
-    $res_pass = pg_query_params($local_conn, $sql_check_pass, $params_pass);
-    $total_pass = pg_num_rows($res_pass);
-    $row = pg_fetch_assoc($res);
+$msg_error = "Invalid email or password. Try again !!!";
 
-    if ($total_pass > 0) {
-        $_SESSION['user_id'] = $row['id'];
-        $_SESSION['user_firstname'] = $row['firstname'];
-        $_SESSION['user_lastname'] = $row['lastname'];
-        header('refresh:0;url=home.php');
-    } else {
-        echo "<script>alert('Incorrect password. Try again !!!')</script>";
-        header('refresh:0;url=signin.html');
-    }
-} else {
-    echo "<script>alert('User email does not exist. Try again !!!')</script>";
-    header('refresh:0;url=signin.html');
+// Email no existe
+if (!$row) {
+    echo "<script>alert('$msg_error'); window.location='signin.html';</script>";
+    exit;
 }
+
+// Usuario inactivo
+if ($row['status'] === 'f') {
+    echo "<script>alert('User is inactive. Contact the administrator.'); window.location='signin.html';</script>";
+    exit;
+}
+
+// Verificar contraseña con hash
+$valid = password_verify($passwd, $row['password']);
+
+// Usuarios viejos con MD5: se aceptan y se convierten a hash
+if (!$valid && hash_equals($row['password'], md5($passwd))) {
+    $valid = true;
+    pg_query_params(
+        $local_conn,
+        'UPDATE users SET password = $1 WHERE id = $2',
+        [password_hash($passwd, PASSWORD_DEFAULT), $row['id']]
+    );
+}
+
+if ($valid) {
+    session_regenerate_id(true);
+    $_SESSION['user_id']        = $row['id'];
+    $_SESSION['user_firstname'] = $row['firstname'];
+    $_SESSION['user_lastname']  = $row['lastname'];
+    header('Location: home.php');
+    exit;
+}
+
+echo "<script>alert('$msg_error'); window.location='signin.html';</script>";
 ?>

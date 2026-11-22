@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: signin.html');
+    exit();
+}
+
 /*
 Use this URL to print data in browser:
 http://localhost/main-store/src/list_user.php
@@ -19,7 +25,7 @@ if ($filter === 'active') {
 }
 
 //Get data from users table
-$sql="
+$sql = "
 select
     id,
     firstname || ' ' || lastname as fullname,
@@ -34,7 +40,6 @@ order by id
 ";
 $res = pg_query($local_conn, $sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,9 +78,9 @@ $res = pg_query($local_conn, $sql);
                         Sin foto
                     <?php } ?>
                 </td>
-                <td><?= $row['fullname'] ?></td>
-                <td><?= $row['email'] ?></td>
-                <td><?= $row['mobile_phone'] ?></td>
+                <td><?= htmlspecialchars($row['fullname']) ?></td>
+                <td><?= htmlspecialchars($row['email']) ?></td>
+                <td><?= htmlspecialchars($row['mobile_phone']) ?></td>
                 <td><?= $row['status'] ?></td>
                 <td>
                     <!-- Edit -->
@@ -110,5 +115,6 @@ $res = pg_query($local_conn, $sql);
         <?php } ?>
         </tbody>
     </table>
+    <a href="home.php">Go to home</a>
 </body>
 </html>
