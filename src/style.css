@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap');
+
+:root {
+  --negro: #000000;
+  --carbon: #141212;
+  --borde: #2b2626;
+  --rojo: #d4121f;
+  --rojo-oscuro: #9e0d17;
+  --texto: #f3eee9;
+  --apagado: #9a9390;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: var(--negro);
+  color: var(--texto);
+  font-family: 'Archivo', system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+h3 {
+  margin: 0 0 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+body > h3 {
+  max-width: 420px;
+  margin: 1.5rem auto 1rem;
+}
+
+a { color: var(--rojo); text-decoration: none; }
+a:hover { color: #fff; text-decoration: underline; }
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--rojo);
+  outline-offset: 3px;
+}
+
+/* Logo */
+.marca {
+  max-width: 420px;
+  margin: 2rem auto 0;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.marca::before {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 8px;
+  margin-bottom: 0.9rem;
+  background: var(--rojo);
+}
+
+/* Página de inicio */
+.lema {
+  max-width: 420px;
+  margin: 1rem auto 0;
+  color: var(--apagado);
+}
+.acciones {
+  display: flex;
+  gap: 0.8rem;
+  max-width: 420px;
+  margin: 2rem auto;
+}
+a.boton {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  background: var(--rojo);
+  color: #fff;
+  border: 2px solid var(--rojo);
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+}
+a.boton:hover { background: var(--rojo-oscuro); border-color: var(--rojo-oscuro); text-decoration: none; }
+a.boton-sec { background: transparent; }
+a.boton-sec:hover { background: var(--rojo); border-color: var(--rojo); }
+
+/* Formularios */
+form {
+  max-width: 420px;
+  margin: 1rem auto;
+  padding: 2rem;
+  background: var(--carbon);
+  border: 1px solid var(--borde);
+  border-left: 6px solid var(--rojo);
+  border-radius: 4px;
+}
+
+form br { display: none; }
+
+label {
+  display: block;
+  margin: 1.1rem 0 0.35rem;
+  font-size: 0.9rem;
+  color: var(--apagado);
+}
+
+input[type=text], input[type=email], input[type=password] {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  background: var(--negro);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font: inherit;
+}
+
+input::placeholder { color: #5d5755; }
+input:focus { border-color: var(--rojo); box-shadow: 0 0 0 3px rgba(212, 18, 31, 0.25); }
+
+input[type=file] { width: 100%; color: var(--apagado); font: inherit; }
+input[type=file]::file-selector-button {
+  margin-right: 0.8rem;
+  padding: 0.5rem 0.9rem;
+  background: var(--borde);
+  color: var(--texto);
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+}
+
+button {
+  width: 100%;
+  margin-top: 1.6rem;
+  padding: 0.85rem 1rem;
+  background: var(--rojo);
+  color: #fff;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--rojo-oscuro); }
+
+form a { display: inline-block; margin-top: 1.2rem; font-size: 0.9rem; }
+
+/* Filtro y tabla de usuarios */
+select {
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--carbon);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font: inherit;
+}
+
+.table {
+  --bs-table-color: var(--texto);
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: #0f0d0d;
+  --bs-table-striped-color: var(--texto);
+  --bs-table-border-color: var(--borde);
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  vertical-align: middle;
+}
+
+.table thead th {
+  color: var(--apagado);
+  font-weight: 600;
+  border-bottom: 2px solid var(--rojo);
+}
+
+.table tbody tr:hover > * { --bs-table-bg-state: #1c0b0d; }
+
+.table td:first-child img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  body { padding: 1rem 0.75rem; }
+  form { padding: 1.25rem; }
+  .marca { font-size: 2.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button { transition: none; }
+}
